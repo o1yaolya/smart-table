@@ -1,7 +1,7 @@
 import './fonts/ys-display/fonts.css'
 import './style.css'
 
-import { data as sourceData } from "./data/dataset_1.js";
+//import { data as sourceData } from "./data/dataset_1.js";
 
 import { initData } from "./data.js";
 import { processFormData } from "./lib/utils.js";
@@ -14,8 +14,8 @@ import { initFiltering } from "./components/filtering.js";
 import { initSearching } from "./components/searching.js";
 
 // Исходные данные используемые в render()
-const api = initData(sourceData);
-const { data, ...indexes } = api;
+const api = initData();
+//const { data, ...indexes } = api;
 
 /**
  * Сбор и обработка полей из таблицы
@@ -82,7 +82,7 @@ const applySorting = initSorting([        // Нам нужно передать 
 //});
 
 const { applyFiltering, updateIndexes } = initFiltering(sampleTable.filter.elements, {    // передаём элементы фильтра
-    searchBySeller: indexes.sellers                                    // для элемента с именем searchBySeller устанавливаем массив продавцов
+    searchBySeller: {},                                   // для элемента с именем searchBySeller устанавливаем массив продавцов
 });
 
 const applySearching = initSearching('search');
