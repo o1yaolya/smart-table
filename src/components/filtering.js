@@ -1,31 +1,34 @@
-import {createComparison, defaultRules} from "../lib/compare.js";
+//import {createComparison, defaultRules} from "../lib/compare.js";
 
 // @todo: #4.3 — настроить компаратор
-const compare = createComparison(defaultRules);
+//const compare = createComparison(defaultRules);
 
 export function initFiltering(elements, indexes) {
-    // @todo: #4.1 — заполнить выпадающие списки опциями
-Object.keys(indexes)                                    // Получаем ключи из объекта
-      .forEach((elementName) => {                        // Перебираем по именам
-        elements[elementName].append(                    // в каждый элемент добавляем опции
-            ...Object.values(indexes[elementName])        // формируем массив имён, значений опций
-                      .map(name => {                        // используйте name как значение и текстовое содержимое
-                                                        // @todo: создать и вернуть тег опции
-                    const option = document.createElement('option');  // Создаём новый элемент <option>
-                     // Устанавливаем value равным name
-                    option.value = name;
-                    
-                    // Устанавливаем текстовое содержимое равным name
-                    option.textContent = name;
-                    
-                    // Возвращаем созданный элемент
-                    return option;
-                      }))
-})
+    const updateIndexes = (elements, indexes) => {
+        // @todo: #4.1 — заполнить выпадающие списки опциями
+        Object.keys(indexes)                                    // Получаем ключи из объекта
+            .forEach((elementName) => {                        // Перебираем по именам
+                elements[elementName].append(                    // в каждый элемент добавляем опции
+                    ...Object.values(indexes[elementName])        // формируем массив имён, значений опций
+                        .map(name => {                        // используйте name как значение и текстовое содержимое
+                            // @todo: создать и вернуть тег опции
+                            const el = document.createElement('option');  // Создаём новый элемент <option>
+                            // Устанавливаем value равным name
+                            el.value = name;
 
-    return (data, state, action) => {
+                            // Устанавливаем текстовое содержимое равным name
+                            el.textContent = name;
+
+                            // Возвращаем созданный элемент
+                            return el;
+                        }))
+            })
+    }
+
+
+    const applyFiltering = (query, state, action) => {
         // @todo: #4.2 — обработать очистку поля
-          
+
         if (action === 'clear') {
             const parentElement = button.parentNode;
             const inputField = parentElement.querySelector('input');
@@ -42,12 +45,31 @@ Object.keys(indexes)                                    // Получаем кл
         }
 
         // @todo: #4.5 — отфильтровать данные используя компаратор
-// Фильтрация данных с помощью компаратора
-        if (action === 'filter') {
-            const comparator = createComparison(defaultRules);
-            const filteredData = comparator.compare(data, state);
-            return filteredData;
-        }
-       return data.filter(row => compare(row, state));
-    };
+        // Фильтрация данных с помощью компаратора
+        // @todo: #4.5 — отфильтровать данные, используя компаратор
+        const filter = {};
+        Object.keys(elements).forEach(key => {
+            if (elements[key]) {
+                if (['INPUT', 'SELECT'].includes(elements[key].tagName) && elements[key].value) { // ищем поля ввода в фильтре с непустыми данными
+                    filter[`filter[${elements[key].name}]`] = elements[key].value; // чтобы сформировать в query вложенный объект фильтра
+                }
+            }
+        })
+
+        return Object.keys(filter).length ? Object.assign({}, query, filter) : query; // если в фильтре что-то добавилось, применим к запросу
+    }
+
+    return {
+        updateIndexes,
+        applyFiltering
+    }
 }
+
+
+//if (action === 'filter') {
+//    const comparator = createComparison(defaultRules);
+//    const filteredData = comparator.compare(data, state);
+//   return filteredData;
+//}
+//}
+// return data.filter(row => compare(row, state));
