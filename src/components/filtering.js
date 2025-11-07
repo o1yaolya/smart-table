@@ -37,15 +37,8 @@ export function initFiltering(elements) {
             inputField.value = '';
             // Обновляем состояние
             state[fieldName] = '';
-            //  setState({
-            //      ...state,
-            //      [fieldName]: ''
-            //  });
+           
         }
-
-        // @todo: #4.5 — отфильтровать данные используя компаратор 
-
-        // Фильтрация данных с помощью компаратора 
 
         // @todo: #4.5 — отфильтровать данные, используя компаратор 
 
@@ -64,7 +57,6 @@ export function initFiltering(elements) {
             }
 
         })
-
 
 
         return Object.keys(filter).length ? Object.assign({}, query, filter) : query; // если в фильтре что-то добавилось, применим к запросу 
